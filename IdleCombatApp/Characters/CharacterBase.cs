@@ -1,34 +1,38 @@
 ﻿using IdleCombatApp.CharacterBase;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace IdleCombatApp.CharacterBase
 {
     public interface IStats
     {
-        int Hitpoints { get; set; }
+        int MaxHitpoints { get; set; }
+        int CurrentHitpoints { get; set; }
         int Power { get; set; }
         int Armor { get; set; }
         int Regen { get; set; }
-        string? Name { get; set; }
+        string Name { get; set; }
         bool IsDead { get; set; }
     }
     public class Base : IStats
     {
-        public int Hitpoints { get; set; }
+        public int MaxHitpoints { get; set; }
+        public int CurrentHitpoints { get; set; }
         public int Power { get; set; }
         public int Armor { get; set; }
         public int Regen { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public bool IsDead { get; set; }
         public void Attack(Base attacker, Base reciever)
         {
             var damage = attacker.Power - reciever.Armor;
             if (damage > 0)
             {
-                reciever.Hitpoints -= damage;
+                reciever.CurrentHitpoints -= damage;
                 Console.WriteLine($"{attacker.Name} hit {reciever.Name} for {damage} damage");
                 
             }
-            if (reciever.Hitpoints <= 0)
+            if (reciever.CurrentHitpoints <= 0)
             {
                 reciever.IsDead = true;
                 Console.WriteLine($"{reciever.Name} is dead!");
@@ -37,9 +41,10 @@ namespace IdleCombatApp.CharacterBase
     }
     public class Player : Base
     {
-        public Player(int hp, int Power, int Armor, int Regen, string Name)
+        public Player(int MaxHitpoints, int Power, int Armor, int Regen, string Name)
         {
-            this.Hitpoints = hp;
+            this.MaxHitpoints = MaxHitpoints;
+            this.CurrentHitpoints = MaxHitpoints;
             this.Power = Power;
             this.Armor = Armor;
             this.Regen = Regen;
@@ -52,9 +57,10 @@ namespace IdleCombatApp.CharacterBase
 }
 public class Enemy : Base
 {
-    public Enemy(int hp, int Power, int Armor, int Regen, string Name)
+    public Enemy(int MaxHitpoints, int Power, int Armor, int Regen, string Name)
     {
-        this.Hitpoints = hp;
+        this.MaxHitpoints = MaxHitpoints;
+        this.CurrentHitpoints = MaxHitpoints;
         this.Power = Power;
         this.Armor = Armor;
         this.Regen = Regen;
@@ -68,10 +74,11 @@ public class Battle : Base
 {
     public void ShowHitpoints(Player player, Enemy enemy)
     {
-        Console.WriteLine("Player Hp: " + player.Hitpoints);
-        Console.WriteLine("Enemy Hp: " + enemy.Hitpoints);
+        Console.WriteLine("Player Hp: " + player.CurrentHitpoints);
+        Console.WriteLine("Enemy Hp: " + enemy.CurrentHitpoints);
 
     }
+
     public void StartBattle(Player player, Enemy enemy)
     {
         ShowHitpoints(player, enemy);
@@ -83,7 +90,7 @@ public class Battle : Base
         }
         else
         {
-            while (player.Hitpoints > 0 && enemy.Hitpoints > 0)
+            while (player.CurrentHitpoints > 0 && enemy.CurrentHitpoints > 0)
             {
                 ShowHitpoints(player, enemy);
                 Attack(player, enemy);
@@ -98,5 +105,13 @@ public class Battle : Base
                 }
             }
         }
+    }
+    
+    //method for creating a monster
+    public Enemy CreateNextEnemy(Enemy previousEnemy)
+    {
+        int increment = 2;
+        Enemy enemy = new Enemy((previousEnemy.MaxHitpoints * increment), (previousEnemy.Power * increment), (previousEnemy.Armor * increment), (previousEnemy.Regen * increment),(previousEnemy.Name + "Next"));
+        return enemy;
     }
 }

@@ -5,17 +5,25 @@ Console.WriteLine("Hello, Gamer!");
 
 //Create Player Character
 //TODO create funtionality for getting playter name from console
-Player player = new Player(10, 3, 0, 0, "Player");
+Player player = new Player(100, 3, 0, 0, "Player");
 //Create first enemy
 Enemy enemy1 = new Enemy(10, 1, 0, 0, "Enemy");
 Battle battle = new Battle();
 
+//initial fight
+battle.StartBattle(player, enemy1);
+
 //create new enemy
-//provide method for creating incemenentally stronger monsters when previous one is defeated.
+var previousEnemy = enemy1;
+var currentEnemy = enemy1;
+while (player.IsDead == false)
+{
+    currentEnemy = battle.CreateNextEnemy(previousEnemy);
+    battle.StartBattle(player, currentEnemy);
+    previousEnemy = currentEnemy;
 
+}
 
-
-battle.StartBattle(player,enemy1);
 
 
 
