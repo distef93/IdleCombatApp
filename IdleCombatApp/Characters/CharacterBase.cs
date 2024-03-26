@@ -41,6 +41,7 @@ namespace IdleCombatApp.CharacterBase
     }
     public class Player : Base
     {
+        public int experience { get; set; }
         public Player(int MaxHitpoints, int Power, int Armor, int Regen, string Name)
         {
             this.MaxHitpoints = MaxHitpoints;
@@ -50,6 +51,7 @@ namespace IdleCombatApp.CharacterBase
             this.Regen = Regen;
             this.Name = Name;
             this.IsDead = false;
+            this.experience = 0;
         }
         public string caracterName = "";
 
@@ -95,6 +97,15 @@ public class Battle : Base
                 Attack(player, enemy);
                 if (enemy.IsDead)
                 {
+                    player.experience += 1;
+                    if(player.experience == 2)
+                    {
+                        player.experience = 0;
+                        player.Power *= 2;
+                        player.MaxHitpoints *= 2;
+                        player.CurrentHitpoints = player.MaxHitpoints;
+                        Console.WriteLine($"{player.Name} has leveled up!");
+                    }
                     continue;
                 }
                 else
