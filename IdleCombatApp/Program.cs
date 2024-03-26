@@ -11,6 +11,7 @@ Enemy enemy1 = new Enemy(10, 1, 0, 0, "Enemy");
 Battle battle = new Battle();
 
 //initial fight
+battle.ShowHitpoints(player, enemy1);
 battle.StartBattle(player, enemy1);
 
 //create new enemy
@@ -19,6 +20,7 @@ var currentEnemy = enemy1;
 while (player.IsDead == false)
 {
     currentEnemy = battle.CreateNextEnemy(previousEnemy);
+    battle.ShowHitpoints(player,currentEnemy);
     battle.StartBattle(player, currentEnemy);
     previousEnemy = currentEnemy;
 

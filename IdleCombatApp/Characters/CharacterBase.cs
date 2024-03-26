@@ -74,14 +74,13 @@ public class Battle : Base
 {
     public void ShowHitpoints(Player player, Enemy enemy)
     {
-        Console.WriteLine("Player Hp: " + player.CurrentHitpoints);
-        Console.WriteLine("Enemy Hp: " + enemy.CurrentHitpoints);
+        Console.WriteLine($"{player.Name} Hp: {player.CurrentHitpoints}");
+        Console.WriteLine($"{enemy.Name} Hp: {enemy.CurrentHitpoints}");
 
     }
 
     public void StartBattle(Player player, Enemy enemy)
     {
-        ShowHitpoints(player, enemy);
         Console.WriteLine("What would you like to do? Press 1 to attack, 2 to run");
         var s = Console.ReadLine();
         if (s != "1")
