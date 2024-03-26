@@ -11,7 +11,7 @@ Enemy enemy1 = new Enemy(10, 1, 0, 0, "Enemy");
 Battle battle = new Battle();
 
 //create new enemy
-//provide method for creating incemenentally stronger monsters when previous one is defeated
+//provide method for creating incemenentally stronger monsters when previous one is defeated.
 
 
 
