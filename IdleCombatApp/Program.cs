@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using IdleCombatApp.CharacterBase;
+using IdleCombatApp.Items;
 
 Console.WriteLine("Hello, Gamer!");
 
@@ -9,6 +10,9 @@ Player player = new Player(100, 3, 0, 0, "Player");
 //Create first enemy
 Enemy enemy1 = new Enemy(10, 1, 0, 0, "Enemy", 1000);
 Battle battle = new Battle();
+player.EquipedHelmet = new Helmet(1, 1000, 0, 0, 0);
+player.EquipedBody = new Body(1, 1000, 0, 0, 0);
+player.EquipedWeapon = new Weapon(1, 1000, 0, 0, 0);
 
 //initial fight
 battle.ShowHitpoints(player, enemy1);

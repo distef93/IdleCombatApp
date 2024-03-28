@@ -28,6 +28,10 @@ namespace IdleCombatApp.CharacterBase
         public int Regen { get; set; }
         public string Name { get; set; }
         public bool IsDead { get; set; }
+        public Helmet EquipedHelmet { get; set; }
+        public Body EquipedBody { get; set; }
+        public Weapon EquipedWeapon { get; set; }
+
         public void Attack(Base attacker, Base reciever)
         {
             var damage = attacker.Power - reciever.Armor;
@@ -92,6 +96,7 @@ public class Battle : Base
 
     public void StartBattle(Player player, Enemy enemy)
     {
+        CheckItems(player);
         Console.WriteLine("What would you like to do? Press 1 to attack, 2 to run");
         var s = Console.ReadLine();
         if (s != "1")
@@ -109,11 +114,8 @@ public class Battle : Base
                     player.experience += 1;
                     if(player.experience == 2)
                     {
-                        player.experience = 0;
-                        player.BasePower *= 2;
-                        player.BaseMaxHitpoints *= 2;
-                        player.CurrentHitpoints = player.BaseMaxHitpoints;
-                        Console.WriteLine($"{player.Name} has leveled up!");
+                        LevelUp(player);
+                        CheckItems(player);
                     }
                     continue;
                 }
@@ -132,5 +134,29 @@ public class Battle : Base
         int increment = 2;
         Enemy enemy = new Enemy((previousEnemy.MaxHitpoints * increment), (previousEnemy.Power * increment), (previousEnemy.Armor * increment), (previousEnemy.Regen * increment),(previousEnemy.Name + "Next"),(previousEnemy.Level + 1));
         return enemy;
+    }
+
+    public void CheckItems(Player player)
+    {
+        var totalHitpoonts = player.EquipedHelmet.Hitpoints + player.EquipedBody.Hitpoints + player.EquipedWeapon.Hitpoints;
+        var totalArmor = player.EquipedWeapon.Armor + player.EquipedBody.Armor + player.EquipedWeapon.Armor;
+        var totalPower = player.EquipedHelmet.Power + player.EquipedBody.Power + player.EquipedWeapon.Power;
+        var totalRegen = player.EquipedHelmet.Regen + player.EquipedBody.Regen + player.EquipedWeapon.Regen;
+
+        player.MaxHitpoints = player.BaseMaxHitpoints + totalHitpoonts;
+        player.Armor = player.BaseArmor + totalArmor;
+        player.Power = player.BasePower + totalPower;
+        player.Regen = player.Regen + totalRegen;
+
+        player.CurrentHitpoints = player.MaxHitpoints;
+    }
+
+    public void LevelUp(Player player)
+    {
+        player.experience = 0;
+        player.BasePower *= 2;
+        player.BaseMaxHitpoints *= 2;
+        player.CurrentHitpoints = player.BaseMaxHitpoints;
+        Console.WriteLine($"{player.Name} has leveled up!");
     }
 }
