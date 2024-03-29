@@ -28,25 +28,9 @@ namespace IdleCombatApp.CharacterBase
         public int Regen { get; set; }
         public string Name { get; set; }
         public bool IsDead { get; set; }
-        public Helmet EquipedHelmet { get; set; }
-        public Body EquipedBody { get; set; }
-        public Weapon EquipedWeapon { get; set; }
-
-        public void Attack(Base attacker, Base reciever)
-        {
-            var damage = attacker.Power - reciever.Armor;
-            if (damage > 0)
-            {
-                reciever.CurrentHitpoints -= damage;
-                Console.WriteLine($"{attacker.Name} hit {reciever.Name} for {damage} damage");
-                
-            }
-            if (reciever.CurrentHitpoints <= 0)
-            {
-                reciever.IsDead = true;
-                Console.WriteLine($"{reciever.Name} is dead!");
-            }
-        }
+        public Helmet? EquipedHelmet { get; set; }
+        public Body? EquipedBody { get; set; }
+        public Weapon? EquipedWeapon { get; set; }
     }
     public class Player : Base
     {
@@ -66,6 +50,20 @@ namespace IdleCombatApp.CharacterBase
             this.IsDead = false;
             this.experience = 0;
         }
+        public void Attack(Enemy enemy)
+        {
+            var damage = Power - enemy.Armor;
+            if(damage > 0)
+            {
+                enemy.CurrentHitpoints -= damage;
+                Console.WriteLine($"{Name} hit {enemy.Name} for {damage} damage");
+            }
+            if (enemy.CurrentHitpoints <= 0)
+            {
+                enemy.IsDead = true;
+                Console.WriteLine($"{enemy.Name} is dead!");
+            }
+        }
     }
 }
 public class Enemy : Base
@@ -81,6 +79,21 @@ public class Enemy : Base
         this.Name = Name;
         this.IsDead = false;
         this.Level = Level;
+    }
+
+    public void Attack(Player player)
+    {
+        var damage = Power - player.Armor;
+        if (damage > 0)
+        {
+            player.CurrentHitpoints -= damage;
+            Console.WriteLine($"{Name} hit {player.Name} for {damage} damage");
+        }
+        if (player.CurrentHitpoints <= 0)
+        {
+            player.IsDead = true;
+            Console.WriteLine($"{player.Name} is dead!");
+        }
     }
 }
 
@@ -105,24 +118,22 @@ public class Battle : Base
         }
         else
         {
-            while (player.CurrentHitpoints > 0 && enemy.CurrentHitpoints > 0)
+            while(!enemy.IsDead && !player.IsDead) 
             {
                 ShowHitpoints(player, enemy);
-                Attack(player, enemy);
-                if (enemy.IsDead)
+                player.Attack(enemy);
+                if(!enemy.IsDead)
+                {
+                    ShowHitpoints(player, enemy);
+                    enemy.Attack(player);
+                }
+                else
                 {
                     player.experience += 1;
                     if(player.experience == 2)
                     {
                         LevelUp(player);
-                        CheckItems(player);
                     }
-                    continue;
-                }
-                else
-                {
-                    ShowHitpoints(player, enemy);
-                    Attack(enemy, player);
                 }
             }
         }
@@ -158,5 +169,6 @@ public class Battle : Base
         player.BaseMaxHitpoints *= 2;
         player.CurrentHitpoints = player.BaseMaxHitpoints;
         Console.WriteLine($"{player.Name} has leveled up!");
+        CheckItems(player);
     }
 }

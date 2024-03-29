@@ -25,39 +25,38 @@ namespace IdleCombatApp.Items
         public int Power { get; set; }
         public int Armor { get; set; }
         public int Regen { get; set; }
-    }
 
-    public class Helmet : ItemBase
-    {
-        public Helmet(int Level, int Hitpoints, int Power, int Armor, int Regen) 
+        public ItemBase(int Level, int Hitpoints, int Power, int Armor, int Regen)
         {
             this.Level = Level;
             this.Hitpoints = Hitpoints;
             this.Power = Power;
             this.Armor = Armor;
             this.Regen = Regen;
+        }
+    }
+
+    //TODO use this to fix the Character class
+    public class Helmet : ItemBase
+    {
+        public int test { get; set; }
+        public Helmet(int Level, int Hitpoints, int Power, int Armor, int Regen):base(Level,Hitpoints,Power, Armor, Regen)
+        {
+            
         }
     }
     public class Body : ItemBase
     {
-        public Body(int Level, int Hitpoints, int Power, int Armor, int Regen)
+        public Body(int Level, int Hitpoints, int Power, int Armor, int Regen) : base(Level, Hitpoints, Power, Armor, Regen)
         {
-            this.Level = Level;
-            this.Hitpoints = Hitpoints;
-            this.Power = Power;
-            this.Armor = Armor;
-            this.Regen = Regen;
+
         }
     }
     public class Weapon : ItemBase
     {
-        public Weapon(int Level, int Hitpoints, int Power, int Armor, int Regen)
+        public Weapon(int Level, int Hitpoints, int Power, int Armor, int Regen) : base(Level, Hitpoints, Power, Armor, Regen)
         {
-            this.Level = Level;
-            this.Hitpoints = Hitpoints;
-            this.Power = Power;
-            this.Armor = Armor;
-            this.Regen = Regen;
+
         }
     }
 }
